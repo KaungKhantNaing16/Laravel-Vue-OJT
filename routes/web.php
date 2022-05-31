@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,16 +27,17 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::resource('users', UserController::class);
+    Route::resource('posts', PostController::class)->except('show');
 });
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->resource('users', UserController::class);
+Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
+
+
 
 

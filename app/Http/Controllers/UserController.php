@@ -14,15 +14,20 @@ class UserController extends Controller
     {
         $this->authorizeResource(User::class);
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return Inertia::render('User/Index', compact('users'));
+        $queries = ['search'];
+
+        return Inertia::render('User/Index', [
+            'users' => User::filter($request->only($queries))->paginate()->withQueryString(),
+            'filters' => $request->all($queries),
+        ]);
     }
 
     /**
@@ -77,12 +82,20 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $authUser = $request->user();
+
         $request->validate([
-            'name' => 'required',
-            'email'=> 'required|email'
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'role' => 'required|string',
         ]);
 
         $user->update($request->only('name', 'email'));
+
+        if ($authUser->checkRole('admin')) {
+            $user->role = $request->role;
+            $user->save();
+        }
 
         return back();
     }

@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Traits\HasCan;
+use App\Models\Post;
 
 class User extends Authenticatable
 {
@@ -74,6 +75,24 @@ class User extends Authenticatable
     public function checkRole($role)
     {
         return $this->role === $role;
+    }
+
+    /**
+     * To search according to keywords
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['serarch'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' .$search. '%')
+                    ->orWhere('email', 'like', '%' .$search. '%');
+            });
+        });
+    }    
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 
 }
