@@ -25,7 +25,7 @@ class UserController extends Controller
         $queries = ['search'];
 
         return Inertia::render('User/Index', [
-            'users' => User::filter($request->only($queries))->paginate()->withQueryString(),
+            'users' => User::filter($request->only($queries))->paginate(5)->withQueryString(),
             'filters' => $request->all($queries),
         ]);
     }

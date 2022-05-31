@@ -82,7 +82,7 @@ class User extends Authenticatable
      */
     public function scopeFilter($query, array $filters)
     {
-        $query->when($filters['serarch'] ?? null, function ($query, $search) {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('name', 'like', '%' .$search. '%')
                     ->orWhere('email', 'like', '%' .$search. '%');

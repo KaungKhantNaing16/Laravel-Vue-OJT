@@ -8,73 +8,37 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <JetFormSection @submitted="updateProfileInformation">
+                <JetFormSection @submitted="updatePost">
                     <template #title>
-                        Profile Information
+                        Post Information
                     </template>
 
                     <template #description>
-                        Update your account's profile information and email address.
+                        Update your post information.
                     </template>
 
                     <template #form>
-                        <!-- Name -->
+                        <!-- Title -->
                         <div class="col-span-6 sm:col-span-4">
-                            <JetLabel for="name" value="Name" />
+                            <JetLabel for="title" value="Title" />
                             <JetInput
-                                id="name"
-                                v-model="form.name"
+                                id="title"
+                                v-model="form.title"
                                 type="text"
                                 class="mt-1 block w-full"
-                                autocomplete="name"
+                                autocomplete="title"
                             />
-                            <JetInputError :message="form.errors.name" class="mt-2" />
+                            <JetInputError :message="form.errors.title" class="mt-2" />
                         </div>
 
-                        <!-- Email -->
+                        <!-- Content -->
                         <div class="col-span-6 sm:col-span-4">
-                            <JetLabel for="email" value="Email" />
-                            <JetInput
-                                id="email"
-                                v-model="form.email"
-                                type="email"
-                                class="mt-1 block w-full"
-                            />
-                            <JetInputError :message="form.errors.email" class="mt-2" />
-
-                            <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
-                                <p class="text-sm mt-2">
-                                    Your email address is unverified.
-
-                                    <Link
-                                        :href="route('verification.send')"
-                                        method="post"
-                                        as="button"
-                                        class="underline text-gray-600 hover:text-gray-900"
-                                        @click.prevent="sendEmailVerification"
-                                    >
-                                        Click here to re-send the verification email.
-                                    </Link>
-                                </p>
-
-                                <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
-                                    A new verification link has been sent to your email address.
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Role -->
-                        <div
-                            class="col-span-6 sm:col-span-4"
-                            v-if="$page.props.permission.users.editRole">
-                            <jet-label for="role" value="Role" />
-                            <jet-select
-                                id="role"
-                                class="mt-1 block w-full"
-                                v-model="form.role"
-                                :options="roles"
-                            />
-                            <jet-input-error :message="form.errors.role" class="mt-2" />
+                            <JetLabel for="content" value="Content" />
+                            <textarea class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" 
+                                      v-model="form.content"
+                                      rows="10">
+                            </textarea>
+                            <JetInputError :message="form.errors.content" class="mt-2" />
                         </div>
                     </template>
 
@@ -123,7 +87,7 @@ export default {
     },
 
     props: {
-        posts: Object,
+        post: Object,
     },
 
     setup(props) {
@@ -133,15 +97,13 @@ export default {
             content: props.post.content,
         });
 
-        const editPost = () => {
-            form.post(route('posts.update', props.post.id), {
-                preserveScroll: true
-            });
+        const updatePost = () => {
+            form.post(route('posts.update', props.post.id));
         };
 
         return {
             form,
-            editPost
+            updatePost
         }
     }
 }

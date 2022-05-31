@@ -22,10 +22,10 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $queries = ['search'];
+        $queries = ['search', 'page'];
 
         return Inertia::render('Post/Index', [
-            'posts' => Post::filter($request->only($queries))->paginate(),
+            'posts' => Post::filter($request->only($queries))->paginate(5)->withQueryString(),
             'filters' => $request->all($queries),
         ]);
     }

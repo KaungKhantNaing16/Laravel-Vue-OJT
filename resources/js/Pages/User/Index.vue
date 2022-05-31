@@ -13,13 +13,13 @@
         </template>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <!-- <jet-input
-                    type="text"
-                    class="block ml-2 mb-4 w-60"
-                    v-model="form.search"
-                    placeholder="Search user..."
-                /> -->
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                    <jet-input
+                        type="text"
+                        class="block m-4 w-60"
+                        v-model="form.search"
+                        placeholder="Search user..."
+                    />
                     <div class="flex flex-col">
                         <div class="my-2 overflow-x-auto sm:mx-6 lg:mx-8">
                             <div class="py-2 align-middle inline-block min-w-full ms:px-6 lg:px-8">
@@ -77,6 +77,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <JetPagination class="m-5" :links="users.links" />
                             </div>
                         </div>
                     </div>
@@ -93,6 +94,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { reactive, watchEffect } from "vue";
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
+import { pickBy } from 'lodash';
 import JetButton from '@/Jetstream/Button';
 import JetInput from '@/Jetstream/Input';
 import JetPagination from '@/Components/Pagination';
@@ -108,7 +110,7 @@ export default {
 
     props: {
         users: Object,
-        filters: Object
+        filters: Object,
     },
 
     setup(props) {
@@ -116,13 +118,13 @@ export default {
             search: props.filters.search,
         });
 
-        // watchEffect(() => {
-        //     const query = pickBy(form);
+        watchEffect(() => {
+            const query = pickBy(form);
 
-        //     Inertia.replace(
-        //         route('users.index', Object.keys(query).length ? query : {})
-        //     );
-        // });
+            Inertia.replace(
+                route('users.index', Object.keys(query).length ? query : {})
+            );
+        });
 
         return {
             form

@@ -14,7 +14,7 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <jet-input
+                    <JetInput
                     type="text"
                     class="block m-4 w-60"
                     v-model="form.search"
@@ -63,6 +63,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <JetPagination class="m-5" :links="posts.links" />
                             </div>
                         </div>
                     </div>
@@ -78,6 +79,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { reactive, watchEffect } from "vue";
 import { Link } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
+import { pickBy } from 'lodash';
 import JetButton from '@/Jetstream/Button';
 import JetInput from '@/Jetstream/Input';
 import JetPagination from '@/Components/Pagination';
@@ -99,15 +101,16 @@ export default {
     setup(props) {
         const form = reactive({
             search: props.filters.search,
+            page: props.filters.page,
         });
 
-        // watchEffect(() => {
-        //     const query = pickBy(form);
+        watchEffect(() => {
+            const query = pickBy(form);
 
-        //     Inertia.replace(
-        //         route('users.index', Object.keys(query).length ? query : {})
-        //     );
-        // });
+            Inertia.replace(
+                route('posts.index', Object.keys(query).length ? query : {})
+            );
+        });
 
         return {
             form
