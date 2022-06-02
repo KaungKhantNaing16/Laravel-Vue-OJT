@@ -3,12 +3,6 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 User Index
-                <Link 
-                    class="float-right" 
-                    :href="route('users.create')"
-                    v-if="$page.props.permission.users.create">
-                    <JetButton>Create</JetButton>
-                </Link>
             </h2>
         </template>
         <div class="py-12">
@@ -70,8 +64,9 @@
                                                     {{ user.created_at }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <Link :href="route('users.show', user.id)" class="text-indigo-600 hover:text-indigo-900" v-if="user.can.view">Show</Link>
-                                                    <Link :href="route('users.edit', user.id)" class="ml-2 text-indigo-600 hover:text-indigo-900"  v-if="user.can.update">Edit</Link>
+                                                    <Link :href="route('users.show', user.id)" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800" v-if="user.can.view">Show</Link>
+                                                    <Link :href="route('users.edit', user.id)" class="text-yellow-400 hover:text-white border border-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2 mb-2 dark:border-yellow-300 dark:text-yellow-300 dark:hover:text-white dark:hover:bg-yellow-400 dark:focus:ring-yellow-900"  v-if="user.can.update">Edit</Link>
+                                                    <button @click="deleteUser(user.id)" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900" type="button"  v-if="user.can.delete">Delete</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -126,8 +121,18 @@ export default {
             );
         });
 
+        const deleteUser = (userId) => {
+            const result = confirm("Are you sure want to delete?");
+            if (result) {
+                    Inertia.delete(route("posts.destroy", userId), {
+                    preserveScroll: true,
+                });
+            }
+        };
+
         return {
-            form
+            form,
+            deleteUser
         }
     }
 }

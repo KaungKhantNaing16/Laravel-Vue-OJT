@@ -59,7 +59,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        if ($user->checkRole('user') && $user->id === $post->id) {
+        if ($user->checkRole('user') && $user->id === $post->user_id) {
             return true;
         }
     }
@@ -73,7 +73,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        if ($user->checkRole('user') && $user->id === $post->id) {
+        if ($user->checkRole('user') && $user->id === $post->user_id) {
             return true;
         }
     }

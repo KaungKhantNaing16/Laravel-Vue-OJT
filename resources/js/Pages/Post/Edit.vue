@@ -83,7 +83,7 @@ export default {
         JetLabel,
         JetActionMessage,
         JetSecondaryButton,
-        JetSelect
+        JetSelect,
     },
 
     props: {

@@ -34,6 +34,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource('users', UserController::class);
     Route::resource('posts', PostController::class)->except('show');
+    Route::get('user/importExportView', [UserController::class, 'importExportView']);
+    Route::get('user/export', [UserController::class, 'export'])->name('export');
+    Route::post('user/import', [UserController::class, 'import'])->name('import');
 });
 
 Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
