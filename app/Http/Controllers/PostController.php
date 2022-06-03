@@ -6,6 +6,9 @@ use App\Models\Post;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PostImport;
+use App\Exports\PostExport;
 
 class PostController extends Controller
 {
@@ -96,7 +99,7 @@ class PostController extends Controller
 
         $post->update($request->only('title', 'content'));
 
-        return back()->with('success', 'Post update successfully.');
+        return redirect()->route('posts.index')->with('success', 'Post update successfully.');
     }
 
     /**
@@ -110,5 +113,21 @@ class PostController extends Controller
         $post->delete();
 
         return back()->with('success', 'Post delete successfully.');
+    }
+
+    public function importView(Request $request)
+    {
+        return view('importFile');
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new PostImport, $request->file('file')->store('file'));
+        return redirect()->back();
+    }
+
+    public function exportPosts(Request $request)
+    {
+        return Excel::download(new PostExport, 'posts.xlsx');
     }
 }

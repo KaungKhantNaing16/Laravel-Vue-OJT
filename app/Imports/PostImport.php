@@ -2,11 +2,11 @@
 
 namespace App\Imports;
 
-use App\Models\User;
+use App\Models\Post;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToModel, WithHeadingRow
+class PostImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -15,10 +15,9 @@ class UsersImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
-        return new User([
-            'name' => $row['name'],
-            'email' => $row['email'],
-            'role' => $row['role']
+        return new Post([
+            "title" => $row['title'],
+            "content" => $row['content'],        
         ]);
     }
 }

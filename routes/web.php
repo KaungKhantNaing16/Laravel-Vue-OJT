@@ -6,6 +6,8 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,12 +36,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource('users', UserController::class);
     Route::resource('posts', PostController::class)->except('show');
-    Route::get('user/importExportView', [UserController::class, 'importExportView']);
-    Route::get('user/export', [UserController::class, 'export'])->name('export');
-    Route::post('user/import', [UserController::class, 'import'])->name('import');
+    Route::get('posts/importView', [PostController::class, 'importView']);
+    Route::get('posts/export', [PostController::class, 'exportPosts'])->name('export');
+    Route::post('posts/import', [PostController::class, 'import'])->name('import');
 });
 
-Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
 
 

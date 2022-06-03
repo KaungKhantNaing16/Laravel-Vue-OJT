@@ -14,12 +14,26 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <JetInput
-                    type="text"
-                    class="block m-4 w-60"
-                    v-model="form.search"
-                    placeholder="Search post ..."
-                    />
+                    <div class="flex justify-between">
+                        <JetInput
+                            type="text"
+                            class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm block m-4 w-60"
+                            v-model="form.search"
+                            placeholder="Search posts ..."
+                        />
+                        <form @submit.prevent="submit" class="mt-5 mr-4">
+                            <input type="file" @input="uploadForm.file = $event.target.files[0]" class="text-sm text-slate-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-violet-50 file:text-violet-700
+                            hover:file:bg-violet-100
+                            "/>
+                            <button type="submit" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Upload</button>
+                            <button @click="exportFile" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Export</button>
+                        </form>   
+                    </div>
+
                     <div class="flex flex-col">
                         <div class="my-2 overflow-x-auto sm:mx-6 lg:mx-8">
                             <div class="py-2 align-middle inline-block min-w-full ms:px-6 lg:px-8">
@@ -79,6 +93,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { reactive, watchEffect } from "vue";
 import { Link } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/inertia-vue3';
 import { Inertia } from '@inertiajs/inertia';
 import { pickBy } from 'lodash';
 import { ref } from "vue";
@@ -106,6 +121,14 @@ export default {
             page: props.filters.page,
         });
 
+        const uploadForm = useForm({
+            file: '',
+        })
+
+        function submit() {
+            uploadForm.post('posts/import', props.posts.user_id)
+        }
+
         watchEffect(() => {
             const query = pickBy(form);
 
@@ -123,9 +146,15 @@ export default {
             }
         };
 
+        const exportFile = () => {
+            Inertia.post(route('export'))
+        }
+
         return {
             form,
-            deletePost
+            deletePost,
+            submit,
+            exportFile
         }
     },
 }

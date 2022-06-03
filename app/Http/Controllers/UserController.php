@@ -6,9 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Validator;
 use Inertia\Inertia;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -115,31 +112,5 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index');
-    }
-
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function importExportView()
-    {
-       return view('import');
-    }
-     
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function export() 
-    {
-        return Excel::download(new UsersExport, 'users.xlsx');
-    }
-     
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function import() 
-    {
-        Excel::import(new UsersImport,request()->file('file'));
-             
-        return back();
     }
 }
